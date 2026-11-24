@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catálogo · RED Mobiliario Escolar</title>
+<meta name="description" content="Catálogo de mobiliario escolar e institucional: sillas, pupitres, mesas de casino, lockers, mobiliario infantil y de oficina.">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&family=Montserrat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-page="catalogo">
+
+<main>
+<section class="banner page-b on-dark" aria-labelledby="h-page">
+  <span class="bg" id="pbg" style="background-image:url(assets/img/cat-escolar.jpg)"></span>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a><span>/</span><a href="catalogo.html">Catálogo</a><span id="crumb-cat"></span></nav>
+    <span class="eb" id="p-eb"><i></i>Catálogo</span>
+    <h1 class="d" id="h-page">Todo el catálogo</h1>
+    <p class="lead" id="p-lead">Elige un modelo, revisa tallas, colores y ficha técnica, y agrégalo a tu cotización.</p>
+  </div>
+</section>
+
+<!-- portada del catálogo: las 6 categorías con acceso directo a cada subcategoría -->
+<section class="cat-ov" id="overview" hidden aria-labelledby="h-ov"><div class="wrap">
+  <nav class="crumbs dk" aria-label="Ruta"><a href="index.html">Inicio</a><span>/</span><span>Catálogo</span></nav>
+  <div class="ov-head"><h1 class="d" id="h-ov">Todo el catálogo</h1><div class="ov-meta" id="ovmeta"></div></div>
+  <div class="ov-list" id="ovlist"></div>
+</div></section>
+
+<section style="padding-top:56px" id="listing"><div class="wrap cat-layout">
+  <aside class="filters" aria-label="Filtros">
+    <div class="shell"><div class="core">
+      <h2 class="d">Buscar</h2>
+      <form class="fsearch" id="fsearch" role="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><label class="sr" for="q-cat">Buscar en el catálogo</label><input id="q-cat" type="search" placeholder="Modelo o código"></form>
+    </div></div>
+    <div class="shell"><div class="core">
+      <h2 class="d">Categorías</h2>
+      <div class="flist" id="flist"></div>
+    </div></div>
+    <div class="shell"><div class="core c-v" style="padding:18px;display:grid;gap:10px">
+      <h2 class="d" style="color:var(--blanco);margin:0;font-size:13px">Instituciones públicas</h2>
+      <p style="font-size:13px;color:rgba(244,243,239,.78)">Cotiza con el ID de tu Compra Ágil o licitación.</p>
+      <a class="pill o sm" href="instituciones.html">Cotizar<span class="ic"><svg class="i"><use href="#i-arr"/></svg></span></a>
+    </div></div>
+  </aside>
+
+  <div>
+    <div class="cat-top"><p id="count" aria-live="polite"></p><button class="pill l sm" type="button" data-open-q>Mi cotización<span class="ic"><svg class="i"><use href="#i-list"/></svg></span></button></div>
+    <div class="subchips" id="subchips" aria-label="Subcategorías"></div>
+    <div class="pgrid" id="pgrid"></div>
+    <div class="empty-cat" id="empty" hidden>
+      <h2 class="d" style="font-size:22px;color:var(--verde)">Sin resultados</h2>
+      <p style="color:var(--t2)">No encontramos modelos con esa búsqueda. Prueba con otra palabra o un código, por ejemplo «SE-101».</p>
+      <button class="pill g sm" type="button" id="clear">Ver todo el catálogo<span class="ic"><svg class="i"><use href="#i-arr"/></svg></span></button>
+    </div>
+    <p class="demo-note">Catálogo de demostración: los códigos, modelos y medidas son de ejemplo y se reemplazarán por los datos reales de RED. Las imágenes de ambiente son referenciales.</p>
+  </div>
+</div></section>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function () {
+  var R = window.RED, D = R.data, esc = R.esc;
+  var state = { cat: '', sub: '', q: '' };
+  var grid = document.getElementById('pgrid'), flist = document.getElementById('flist'), chips = document.getElementById('subchips');
+  var qInput = document.getElementById('q-cat');
+
+  function norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  function list() {
+    return D.productos.filter(function (p) {
+      if (state.cat && p.cat !== state.cat) return false;
+      if (state.sub && p.sub !== state.sub) return false;
+      if (state.q) { var h = norm(p.code + ' ' + p.nombre + ' ' + p.sub + ' ' + R.catBy(p.cat).nombre); return norm(state.q).split(/\s+/).every(function (w) { return h.indexOf(w) > -1; }); }
+      return true;
+    });
+  }
+  function renderFilters() {
+    var all = '<button type="button" data-cat="" aria-pressed="' + (!state.cat) + '">Todo el catálogo<small>' + D.productos.length + '</small></button>';
+    flist.innerHTML = all + D.categorias.map(function (k) {
+      var n = D.productos.filter(function (p) { return p.cat === k.slug; }).length;
+      return '<button type="button" data-cat="' + k.slug + '" aria-pressed="' + (state.cat === k.slug) + '">' + esc(k.corto) + '<small>' + n + '</small></button>';
+    }).join('');
+    var k = R.catBy(state.cat);
+    chips.innerHTML = k ? ['<button type="button" data-sub="" aria-pressed="' + (!state.sub) + '">Todas</button>'].concat(k.subs.map(function (s) {
+      return '<button type="button" data-sub="' + esc(s) + '" aria-pressed="' + (state.sub === s) + '">' + esc(s) + '</button>';
+    })).join('') : '';
+    chips.hidden = !k;
+  }
+  function portada() { return !state.cat && !state.q; }
+  function renderHead() {
+    var k = R.catBy(state.cat), ov = portada();
+    document.getElementById('h-page').textContent = state.q ? 'Resultados para «' + state.q + '»' : (k ? k.nombre : 'Catálogo de mobiliario escolar e institucional');
+    document.getElementById('p-eb').innerHTML = '<i></i>' + (k ? 'Categoría ' + k.n : 'Catálogo · 6 categorías');
+    document.getElementById('p-lead').textContent = k ? k.subs.join(' · ') : (ov
+      ? 'Mobiliario escolar, de casino, institucional, lockers metálicos, mobiliario para jardines infantiles y de oficina. Entra a cada categoría para revisar modelos, tallas, colores y fichas técnicas, y solicita tu cotización en línea.'
+      : 'Elige un modelo, revisa tallas, colores y ficha técnica, y agrégalo a tu cotización.');
+    document.getElementById('crumb-cat').innerHTML = k ? ' / ' + esc(k.corto) : '';
+    document.querySelector('.page-b').classList.toggle('cat-b', !ov);  // categorías y búsqueda: banner de alto fijo
+    document.getElementById('pbg').style.backgroundImage = 'url(' + (k ? (k.banner || k.img) : 'assets/img/banner-escolar.jpg') + ')';
+    document.getElementById('pbg').style.backgroundPosition = (k && k.bpos) || '';  // encuadre propio por categoría
+    document.title = (k ? k.nombre : 'Catálogo') + ' · RED Mobiliario Escolar';
+    document.querySelectorAll('.hdr-r2 a[href^="catalogo.html"]').forEach(function (a) {
+      var h = a.getAttribute('href'), on = h === 'catalogo.html' ? ov : h === 'catalogo.html#' + state.cat;
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+  }
+  // portada: una fila por categoría (foto, nombre, subcategorías y botón con la cantidad de modelos)
+  function renderOverview() {
+    document.getElementById('ovlist').innerHTML = D.categorias.map(function (k) {
+      var n = D.productos.filter(function (p) { return p.cat === k.slug; }).length;
+      return '<div class="shell rv"><div class="core ov-row">' +
+        '<a class="ov-ph" href="catalogo.html#' + k.slug + '" style="background-image:url(' + (k.foto || k.img) + ')" aria-label="' + esc(k.nombre) + '"></a>' +
+        '<div class="ov-bd"><h2 class="d"><span class="n">' + k.n + '</span>' + esc(k.nombre) + '</h2>' +
+        '<div class="ov-subs">' + k.subs.map(function (s) { return '<a href="catalogo.html#' + k.slug + '" data-sub="' + esc(s) + '">' + esc(s) + '</a>'; }).join('') + '</div>' +
+        '<a class="pill g sm" href="catalogo.html#' + k.slug + '">Ver ' + n + (n === 1 ? ' modelo' : ' modelos') + '<span class="ic"><svg class="i"><use href="#i-arr"/></svg></span></a></div></div></div>';
+    }).join('');
+    document.getElementById('ovmeta').innerHTML = '<div><b>' + D.categorias.length + '</b><span>categorías</span></div><div><b>' + D.categorias.reduce(function (a, k) { return a + k.subs.length; }, 0) + '</b><span>subcategorías</span></div><div><b>' + D.productos.length + '</b><span>modelos</span></div>';
+    R.reveal(document.getElementById('ovlist'));
+  }
+  function render() {
+    var ov = portada();
+    document.getElementById('overview').hidden = !ov;
+    document.querySelector('.page-b').hidden = ov;  // la portada del catálogo no lleva banner
+    document.getElementById('listing').hidden = ov;
+    if (ov) { renderOverview(); renderHead(); return; }
+    var items = list();
+    grid.innerHTML = items.map(R.card).join('');
+    document.getElementById('empty').hidden = items.length > 0;
+    document.getElementById('count').innerHTML = '<b>' + items.length + '</b> ' + (items.length === 1 ? 'modelo' : 'modelos');
+    renderFilters(); renderHead();
+    grid.querySelectorAll('.shell').forEach(function (el, i) { el.classList.add('rv'); });
+    R.reveal(grid);
+  }
+  function fromHash() {
+    var h = decodeURIComponent(location.hash.slice(1));
+    state.q = ''; state.sub = '';
+    if (h === 'buscar') { try { state.q = sessionStorage.getItem('red-q') || ''; } catch (e) {} state.cat = ''; }
+    else state.cat = R.catBy(h) ? h : '';
+    try { var s = sessionStorage.getItem('red-sub'); if (s && R.catBy(state.cat) && R.catBy(state.cat).subs.indexOf(s) > -1) state.sub = s; sessionStorage.removeItem('red-sub'); } catch (e) {}
+    qInput.value = state.q;
+    render();
+  }
+  flist.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var c = b.getAttribute('data-cat');
+    if (location.hash.slice(1) === c) { state.q = ''; qInput.value = ''; state.sub = ''; render(); }
+    else location.hash = c;
+  });
+  chips.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; state.sub = b.getAttribute('data-sub'); render(); });
+  document.getElementById('fsearch').addEventListener('submit', function (e) { e.preventDefault(); window.RED_onSearch(qInput.value.trim()); });
+  qInput.addEventListener('input', function () { state.q = qInput.value.trim(); state.cat = state.q ? '' : state.cat; state.sub = ''; render(); });
+  document.getElementById('clear').addEventListener('click', function () { qInput.value = ''; if (location.hash) location.hash = ''; else { state = { cat: '', sub: '', q: '' }; render(); } });
+  window.RED_onSearch = function (q) { try { sessionStorage.setItem('red-q', q); } catch (e) {} if (location.hash === '#buscar') fromHash(); else location.hash = 'buscar'; window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  window.addEventListener('hashchange', function () { fromHash(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  fromHash();
+})();
+</script>
+</body>
+</html>

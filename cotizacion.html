@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi cotización · RED Mobiliario Escolar</title>
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&family=Montserrat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-page="cotizacion">
+
+<main>
+<section class="cq" aria-labelledby="h-page"><div class="wrap">
+  <nav class="crumbs dk" aria-label="Ruta"><a href="index.html">Inicio</a><span>/</span><span>Mi cotización</span></nav>
+  <div class="cq-head">
+    <h1 class="d" id="h-page">Mi cotización</h1>
+    <ol class="cq-steps" id="steps" aria-label="Pasos">
+      <li data-s="1"><b>1</b>Revisa tu lista</li>
+      <li data-s="2"><b>2</b>Tus datos</li>
+      <li data-s="3"><b>3</b>Solicitud enviada</li>
+    </ol>
+  </div>
+
+  <!-- lista + datos en la misma vista -->
+  <div class="cq-g" id="main-view">
+    <div class="cq-list">
+      <div class="cq-lh"><h2 class="d">1 · Revisa tu lista</h2><span id="cq-count"></span></div>
+      <div class="cq-lines" id="lines"></div>
+      <div class="cq-lf">
+        <a class="q-add" href="catalogo.html"><svg class="i"><use href="#i-plus"/></svg>Agregar más productos</a>
+        <div class="cq-tot"><span><b data-lines>0</b> líneas</span><span><b data-units>0</b> unidades</span></div>
+      </div>
+      <div class="cq-trust"><span><svg class="i"><use href="#i-truck"/></svg>Despachos a todo Chile</span><span><svg class="i"><use href="#i-bank"/></svg>Proveedor habilitado en Mercado Público</span></div>
+    </div>
+
+    <div class="shell cq-fs"><div class="core cq-form">
+      <form id="form" novalidate>
+        <h2 class="d">2 · Tus datos</h2>
+        <fieldset class="cq-tipo">
+          <legend>Tipo de cliente <span class="req">*</span></legend>
+          <label><input type="radio" name="tipo" value="particular"><span class="cq-ti"><svg aria-hidden="true"><use href="#iso-particular"/></svg></span><span>Persona particular</span></label>
+          <label><input type="radio" name="tipo" value="colegio" checked><span class="cq-ti"><svg aria-hidden="true"><use href="#iso-colegio"/></svg></span><span>Colegio o establecimiento educacional</span></label>
+          <label><input type="radio" name="tipo" value="empresa"><span class="cq-ti"><svg aria-hidden="true"><use href="#iso-empresa"/></svg></span><span>Empresa o institución</span></label>
+          <label><input type="radio" name="tipo" value="organismo"><span class="cq-ti"><svg aria-hidden="true"><use href="#iso-publico"/></svg></span><span>Organismo público / Mercado Público</span></label>
+        </fieldset>
+        <p class="cq-note" id="note-org" hidden>Proveedor habilitado en Mercado Público. Si tu solicitud corresponde a una Compra Ágil o licitación, indica su ID para responder dentro del mismo proceso.</p>
+        <div class="form">
+          <div class="field" id="w-ent"><label for="f-ent"><span id="l-ent">Nombre del establecimiento</span> <span class="req">*</span></label><input id="f-ent" name="entidad" autocomplete="organization"></div>
+          <div class="field" id="w-rut"><label for="f-rut"><span id="l-rut">RUT</span> <span class="req" id="r-rut">*</span></label><input id="f-rut" name="rut" placeholder="76.123.456-7"></div>
+          <div class="field" id="w-cont"><label for="f-cont"><span id="l-cont">Persona de contacto</span> <span class="req">*</span></label><input id="f-cont" name="contacto" autocomplete="name" placeholder="Nombre y apellido"></div>
+          <div class="field"><label for="f-mail">Correo <span class="req">*</span></label><input id="f-mail" name="correo" type="email" autocomplete="email" placeholder="nombre@institucion.cl"></div>
+          <div class="field"><label for="f-tel">Teléfono <span class="req">*</span></label><input id="f-tel" name="telefono" type="tel" autocomplete="tel" placeholder="+56 9 …"></div>
+          <div class="field"><label for="f-com">Comuna de despacho <span class="req">*</span></label><input id="f-com" name="comuna" placeholder="Ej.: Temuco"></div>
+          <div class="field full" id="w-ca" hidden><label for="f-ca">ID Compra Ágil o licitación <small>(opcional)</small></label><input id="f-ca" name="compraAgil" placeholder="Ej.: 1234-56-COT24"></div>
+          <div class="field full"><label for="f-coment">Comentarios</label><textarea id="f-coment" name="comentarios" placeholder="Plazos, condiciones de despacho u otros detalles"></textarea></div>
+        </div>
+        <p class="cq-small">Te enviaremos una copia de tu solicitud al correo indicado. Nuestro equipo te responderá con la cotización.</p>
+        <button class="pill o full" type="submit">Solicitar cotización<span class="ic"><svg class="i"><use href="#i-send"/></svg></span></button>
+      </form>
+    </div></div>
+  </div>
+
+  <!-- vacía -->
+  <div class="shell cq-state" id="empty" hidden><div class="core">
+    <span class="cq-si"><svg aria-hidden="true"><use href="#iso-colegio"/></svg></span>
+    <h2 class="d">Tu cotización está vacía</h2>
+    <p>Entra a la ficha de un modelo, indica talla, colores y cantidad, y presiona «Agregar a mi cotización».</p>
+    <div class="cq-btns"><a class="pill g" href="catalogo.html">Ir al catálogo<span class="ic"><svg class="i"><use href="#i-arr"/></svg></span></a><a class="pill l" href="instituciones.html">Cotizar como institución pública<span class="ic"><svg class="i"><use href="#i-bank"/></svg></span></a></div>
+  </div></div>
+
+  <!-- confirmación -->
+  <div class="shell cq-state" id="done" hidden><div class="core">
+    <span class="cq-ok"><svg class="i"><use href="#i-check"/></svg></span>
+    <h2 class="d">Recibimos tu solicitud</h2>
+    <span class="cq-nro" id="nro"></span>
+    <p>Te enviamos una copia a tu correo <b id="ok-mail"></b>.</p>
+    <p id="ok-lines"></p>
+    <small class="cq-proto">Prototipo: la solicitud no se envió a ningún correo. En el sitio final esta página registra la conversión «solicitud_cotizacion» en Google Analytics y Google Ads.</small>
+    <div class="cq-btns"><a class="pill g" href="catalogo.html">Volver al catálogo<span class="ic"><svg class="i"><use href="#i-arr"/></svg></span></a><a class="pill l" href="como-cotizar.html#despachos">Plazos de despacho<span class="ic"><svg class="i"><use href="#i-truck"/></svg></span></a></div>
+  </div></div>
+</div></section>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/forms.js"></script>
+<script>
+(function () {
+  var R = window.RED, D = R.data, esc = R.esc, F = window.REDForms;
+  // compatibilidad con los enlaces antiguos a #publico
+  if (location.hash === '#publico') { location.replace('instituciones.html'); return; }
+
+  // ---------- lista ----------
+  var linesEl = document.getElementById('lines');
+  function renderLines() {
+    var ls = R.lines();
+    linesEl.innerHTML = ls.map(function (l, i) {
+      var p = R.prodBy(l.code); if (!p) return '';
+      var at = R.attrsOf(l).map(function (a) { return (a.hex ? '<i style="background:' + a.hex + '"></i>' : '') + esc(a.v); }).join('<span class="sep">·</span>');
+      return '<div class="cq-line" data-i="' + i + '">' +
+        '<a class="cq-th' + (p.img ? '' : ' pend') + '" href="' + R.prodUrl(p) + '"' + (p.img ? ' style="background-image:url(' + p.img + ')"' : '') + ' aria-label="' + esc(p.nombre) + '"></a>' +
+        '<div class="cq-li"><b>' + esc(p.nombre) + '</b><span class="cq-code">Código ' + p.code + '</span><span class="cq-at">' + at + '</span></div>' +
+        '<div class="cq-ctr"><div class="stp2"><button type="button" data-d="-1" aria-label="Restar una unidad">−</button><output>' + l.q + '</output><button type="button" data-d="1" aria-label="Sumar una unidad">+</button></div><button class="rm" type="button">Quitar</button></div></div>';
+    }).join('');
+    var n = ls.length;
+    document.getElementById('cq-count').textContent = n + (n === 1 ? ' línea' : ' líneas');
+    R.totals();
+    var vacia = !n && !enviado;
+    document.getElementById('main-view').hidden = vacia || enviado;
+    document.getElementById('empty').hidden = !vacia;
+    pasos();
+  }
+  linesEl.addEventListener('click', function (e) { R.stepperClick(e, linesEl, function () { renderLines(); R.rerenderDrawer(); }); });
+  R.onChange(function () { if (!enviado) renderLines(); });
+
+  // ---------- tipo de cliente ----------
+  var form = document.getElementById('form'), E = form.elements;
+  var TIPOS = {
+    particular: { ent: null, rut: 'RUT (opcional, para boleta o factura)', rutReq: false, cont: 'Nombre y apellido', ca: false },
+    colegio: { ent: 'Nombre del establecimiento', ph: 'Ej.: Escuela Básica Los Aromos', rut: 'RUT', rutReq: true, cont: 'Persona de contacto', ca: false },
+    empresa: { ent: 'Empresa o institución', ph: 'Ej.: Constructora Los Andes', rut: 'RUT', rutReq: true, cont: 'Persona de contacto', ca: false },
+    organismo: { ent: 'Organismo o institución', ph: 'Ej.: Municipalidad de Temuco', rut: 'RUT', rutReq: true, cont: 'Persona de contacto', ca: true }
+  };
+  function tipo() { return form.querySelector('input[name=tipo]:checked').value; }
+  function aplicarTipo() {
+    var t = TIPOS[tipo()];
+    form.querySelectorAll('.cq-tipo label').forEach(function (l) { l.classList.toggle('on', l.querySelector('input').checked); });
+    document.getElementById('w-ent').hidden = !t.ent;
+    if (t.ent) { document.getElementById('l-ent').textContent = t.ent; E.entidad.placeholder = t.ph; }
+    document.getElementById('l-rut').textContent = t.rut;
+    document.getElementById('r-rut').hidden = !t.rutReq;
+    E.rut.placeholder = t.rutReq ? '76.123.456-7' : '12.345.678-9';
+    document.getElementById('l-cont').textContent = t.cont;
+    document.getElementById('w-ca').hidden = !t.ca;
+    document.getElementById('note-org').hidden = !t.ca;
+    // el RUT del particular va junto al nombre
+    document.getElementById('w-cont').style.order = t.ent ? '' : '-1';
+    form.querySelectorAll('.field.err').forEach(function (f) { F.mark(f.querySelector('input,textarea'), true); });
+  }
+  form.addEventListener('change', function (e) { if (e.target.name === 'tipo') aplicarTipo(); pasos(); });
+  form.addEventListener('input', function (e) { var f = e.target.closest('.field'); if (f && f.classList.contains('err')) validar(true); pasos(); });
+
+  function validar(silencioso) {
+    var t = TIPOS[tipo()], v = F.validator(silencioso);
+    if (t.ent) v.chk(E.entidad, E.entidad.value.trim().length > 1, 'Indica el nombre del ' + (tipo() === 'organismo' ? 'organismo' : tipo() === 'empresa' ? 'la empresa o institución' : 'establecimiento') + '.');
+    else F.mark(E.entidad, true);
+    if (t.rutReq || E.rut.value.trim()) v.chk(E.rut, F.rutValido(E.rut.value), E.rut.value.trim() ? 'Revisa el RUT; el dígito verificador no coincide.' : 'Indica el RUT.');
+    else F.mark(E.rut, true);
+    v.chk(E.contacto, E.contacto.value.trim().length > 2, 'Escribe nombre y apellido.');
+    v.chk(E.correo, F.correoValido(E.correo.value), 'Revisa el correo; debe tener el formato nombre@dominio.cl.');
+    v.chk(E.telefono, E.telefono.value.replace(/\D/g, '').length >= 8, 'Escribe un teléfono de al menos 8 dígitos.');
+    v.chk(E.comuna, E.comuna.value.trim().length > 1, 'Escribe la comuna de despacho.');
+    return v.done();
+  }
+
+  // ---------- pasos ----------
+  var enviado = false;
+  function pasos() {
+    var paso = enviado ? 3 : (E.correo.value.trim() || E.contacto.value.trim() || E.entidad.value.trim() ? 2 : 1);
+    document.querySelectorAll('#steps li').forEach(function (li) { var s = +li.getAttribute('data-s'); li.className = s < paso ? 'ok' : s === paso ? 'on' : ''; });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!validar(false)) return;
+    var n = R.lines().length;
+    document.getElementById('nro').textContent = 'N.º de solicitud ' + F.numero();
+    document.getElementById('ok-mail').textContent = E.correo.value.trim();
+    document.getElementById('ok-lines').textContent = 'Tu solicitud incluye ' + n + (n === 1 ? ' línea' : ' líneas') + '. Te contactaremos con la cotización.';
+    enviado = true; R.clear();
+    document.getElementById('main-view').hidden = true; document.getElementById('empty').hidden = true;
+    document.getElementById('done').hidden = false; pasos();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // la franja «Mi cotización» del header abre el panel; en esta página no hace falta
+  aplicarTipo(); renderLines();
+})();
+</script>
+</body>
+</html>

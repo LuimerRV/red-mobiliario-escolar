@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ficha de producto · RED Mobiliario Escolar</title>
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&family=Montserrat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-page="producto">
+
+<main>
+<!-- 1 · campos fijos: galería, código, descripción, PDF y opciones disponibles (solo información) -->
+<section class="pd"><div class="wrap">
+  <nav class="crumbs dk" aria-label="Ruta" id="crumbs"></nav>
+  <div class="pd-g">
+    <div class="pd-gal rv">
+      <div class="shell main"><div class="core" id="mainimg"></div></div>
+      <div class="pd-thumbs" id="thumbs" aria-label="Imágenes del producto"></div>
+    </div>
+    <div class="pd-info rv">
+      <span class="pd-eb" id="p-eb"></span>
+      <h1 class="d" id="p-name"></h1>
+      <span class="pd-code" id="p-code"></span>
+      <p class="pd-desc" id="p-desc"></p>
+      <div class="pd-btns">
+        <button class="pill l" type="button" id="pdf"><span id="pdf-t">Descargar ficha técnica (PDF)</span><span class="ic"><svg class="i"><use href="#i-doc"/></svg></span></button>
+        <button class="pill g" type="button" id="go-q">Cotizar este modelo<span class="ic"><svg class="i" style="rotate:90deg"><use href="#i-arr"/></svg></span></button>
+      </div>
+      <div class="pd-trust"><span><svg class="i"><use href="#i-truck"/></svg>Despachos a todo Chile</span><span><svg class="i"><use href="#i-bank"/></svg>Proveedor habilitado en Mercado Público</span></div>
+      <h2 class="d pd-h" id="carac-h"></h2>
+      <dl class="pd-carac" id="carac"></dl>
+    </div>
+  </div>
+</div></section>
+
+<!-- 2 · Arma tu cotización: una fila por combinación -->
+<section class="pd-qs" id="cotiza" aria-labelledby="q-h"><div class="wrap">
+  <div class="shell rv"><div class="core pd-q">
+    <div class="pd-qh"><h2 class="d" id="q-h"></h2><p id="q-sub"></p></div>
+    <div class="qt" id="qt"></div>
+    <button class="q-add" type="button" id="addrow"><svg class="i"><use href="#i-plus"/></svg>Agregar otra combinación</button>
+    <div class="q-alert" id="q-alert" role="alert" hidden><svg class="i"><use href="#i-alert"/></svg><span>Revisa las combinaciones marcadas: falta elegir una opción o indicar la cantidad.</span></div>
+    <div class="q-foot"><span id="q-sum"></span><button class="pill o" type="button" id="add-all">Agregar a mi cotización<span class="ic"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+  </div></div>
+  <p class="q-note">Sin precios en el sitio: recibes la cotización por correo, con plazo y costo de despacho a tu comuna.</p>
+</div></section>
+
+<section style="padding-top:0" aria-labelledby="h-rel"><div class="wrap">
+  <div class="sh rv"><div><h2 class="d" id="h-rel">Relacionados</h2></div><a class="pill l sm" id="rel-all" href="catalogo.html">Ver categoría<span class="ic"><svg class="i"><use href="#i-arr"/></svg></span></a></div>
+  <div class="pgrid" id="related"></div>
+</div></section>
+
+<section class="dark on-dark" style="padding-block:clamp(56px,7vw,88px)"><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap">
+  <div><h2 class="d" style="font-size:clamp(22px,2.6vw,34px);color:var(--blanco);max-width:24ch">Indica tu comuna y te informamos plazo y costo</h2></div>
+  <button class="pill o" type="button" data-open-q>Ver mi cotización<span class="ic"><svg class="i"><use href="#i-list"/></svg></span></button>
+</div></section>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function () {
+  var R = window.RED, D = R.data, esc = R.esc;
+  var p, rows = [], intento = false;
+
+  // ---------- utilidades de campos ----------
+  function optText(f, v) { return f.tallas ? v + ' · ' + (D.tallas[v] || '') : (f.sub ? v + ' ' + f.sub : v); }
+  function valText(f, v) { return f.col ? D.colores[v].nombre : (f.sub && !f.tallas ? v + ' ' + f.sub : v); }
+  function campo(k) { for (var i = 0; i < p.campos.length; i++) if (p.campos[i].k === k) return p.campos[i]; }
+  function nuevaFila(def) {
+    var r = { v: {}, esp: { largo: '', ancho: '', alto: '' }, q: def ? 1 : 0 };
+    // por defecto: primer color y primera opción; en tallas, una intermedia (T1 y T2 aún no tienen curso confirmado)
+    p.campos.forEach(function (f) { r.v[f.k] = def ? (f.col ? f.col[0] : (f.tallas && f.v.length > 2 ? f.v[Math.floor(f.v.length / 2)] : f.v[0])) : ''; });
+    return r;
+  }
+  function esEspecial(f, r) { return f.especial && r.v[f.k] === f.especial; }
+
+  // ---------- 1 · ficha ----------
+  function load() {
+    var code = decodeURIComponent(location.hash.slice(1)).toUpperCase();
+    p = R.prodBy(code) || R.prodBy('SE-101');
+    var k = R.catBy(p.cat);
+    document.title = p.nombre + ' · ' + p.code + ' · RED Mobiliario Escolar';
+    document.getElementById('crumbs').innerHTML = '<a href="index.html">Inicio</a><span>/</span><a href="catalogo.html#' + k.slug + '">' + esc(k.nombre) + '</a><span>/</span><a href="catalogo.html#' + k.slug + '" data-sub="' + esc(p.sub) + '">' + esc(p.sub) + '</a><span>/</span><span>' + esc(p.nombre) + '</span>';
+    document.getElementById('p-eb').textContent = k.nombre + ' · ' + p.sub;
+    document.getElementById('p-name').textContent = p.nombre;
+    document.getElementById('p-code').textContent = 'Código ' + p.code;
+    document.getElementById('p-desc').textContent = p.desc;
+    document.getElementById('pdf-t').textContent = 'Ficha técnica (PDF)';
+    document.getElementById('pdf').setAttribute('aria-label', 'Descargar ficha técnica ' + p.code + ' en PDF');
+    document.getElementById('carac-h').textContent = 'Características y opciones';
+    document.getElementById('q-h').textContent = 'Cotiza ' + p.nombre + ' por cantidad';
+    var nombres = p.campos.map(function (f) { return f.col ? null : f.l.toLowerCase(); }).filter(Boolean);
+    document.getElementById('q-sub').textContent = 'Cada fila es una combinación de ' + nombres.join(', ') + (p.campos.some(function (f) { return f.col; }) ? ' y colores' : '') + '. Agrega una fila por cada combinación que necesites.' + (p.campos.some(function (f) { return f.especial; }) ? ' Si eliges medidas especiales, indica largo, ancho y alto (opcional).' : '');
+
+    // galería: foto principal y miniaturas debajo
+    var gal = (p.galeria || (p.img ? [p.img] : [])).slice(0, 3);  // galería de 3 fotos
+    var main = document.getElementById('mainimg'), th = document.getElementById('thumbs');
+    if (gal.length) {
+      main.innerHTML = '<span class="im" style="background-image:url(' + gal[0] + ')" role="img" aria-label="' + esc(p.nombre) + '"></span>';
+      th.innerHTML = gal.map(function (g, i) { return '<button type="button" aria-pressed="' + (i === 0) + '" style="background-image:url(' + g + ')" aria-label="Imagen ' + (i + 1) + ' de ' + gal.length + '"></button>'; }).join('');
+    } else {
+      main.innerHTML = '<span class="ph pend" style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(-26.57deg,#E7E5DF 0 14px,#E2E0D9 14px 15px)"><span class="pend-l">Foto de producto pendiente</span></span>';
+      th.innerHTML = '';
+    }
+    th.hidden = gal.length < 2;
+
+    // características y opciones (solo información)
+    document.getElementById('carac').innerHTML = p.carac.map(function (c) {
+      if (typeof c === 'string') {
+        var f = campo(c.slice(1)), dd;
+        if (f.col) dd = '<div class="pd-sws">' + f.col.map(function (x) { var o = D.colores[x]; return '<span><i style="background:' + o.hex + '"></i>' + esc(o.nombre) + '</span>'; }).join('') + '</div>';
+        else dd = '<div class="pd-chips">' + f.v.map(function (v) { var s = f.tallas ? D.tallas[v] : (f.sub || ''); return '<span><b>' + esc(v) + '</b>' + (s ? '<small>' + esc(s) + '</small>' : '') + '</span>'; }).join('') + '</div>';
+        return '<div><dt>' + esc(f.lc || f.l) + '</dt><dd>' + dd + '</dd></div>';
+      }
+      return '<div><dt>' + esc(c[0]) + '</dt><dd>' + c[1].map(function (t) { return '<span class="ln">' + esc(t) + '</span>'; }).join('') + '</dd></div>';
+    }).join('');
+
+    rows = [nuevaFila(true)]; intento = false;
+    render();
+
+    // relacionados
+    var rel = D.productos.filter(function (x) { return x.cat === p.cat && x.code !== p.code; });
+    if (rel.length < 4) rel = rel.concat(D.productos.filter(function (x) { return x.destacado && x.cat !== p.cat && x.code !== p.code; })).concat(D.productos.filter(function (x) { return !x.destacado && x.cat !== p.cat && x.code !== p.code; }));
+    document.getElementById('related').innerHTML = rel.slice(0, 4).map(R.card).join('');
+    document.getElementById('rel-all').href = 'catalogo.html#' + p.cat;
+    document.querySelectorAll('#related .shell').forEach(function (el) { el.classList.add('rv'); });
+    R.reveal();
+    window.scrollTo(0, 0);
+  }
+
+  // ---------- 2 · tabla de combinaciones ----------
+  function faltan(r) {
+    var m = p.campos.filter(function (f) { return !r.v[f.k]; });
+    return { campos: m, q: !(r.q > 0) };
+  }
+  function mensaje(fx) {
+    // «Elige color formalita y indica una cantidad mayor a 0.» · con varios campos: «Elige talla, color formalita y color estructura. Indica…»
+    var c = fx.campos.map(function (f) { return f.l.toLowerCase(); }).join(', ').replace(/, ([^,]*)$/, ' y $1');
+    if (c && fx.q) return 'Elige ' + c + (fx.campos.length > 1 ? '. Indica' : ' e indica') + ' una cantidad mayor a 0.';
+    return c ? 'Elige ' + c + '.' : 'Indica una cantidad mayor a 0.';
+  }
+  function render() {
+    var cols = p.campos.length;
+    var qt = document.getElementById('qt');
+    qt.style.setProperty('--cols', cols);
+    var head = '<div class="qt-h" aria-hidden="true"><span>#</span>' + p.campos.map(function (f) { return '<span>' + esc(f.l) + '</span>'; }).join('') + '<span>Cantidad</span><span></span></div>';
+    qt.innerHTML = head + rows.map(function (r, i) {
+      var fx = faltan(r), err = intento && (fx.campos.length || fx.q);
+      var fields = p.campos.map(function (f) {
+        var bad = intento && !r.v[f.k], id = 'f' + i + '-' + f.k;
+        var opts = '<option value="">Elegir…</option>' + (f.col ? f.col.map(function (x) { return '<option value="' + x + '"' + (r.v[f.k] === x ? ' selected' : '') + '>' + esc(D.colores[x].nombre) + '</option>'; })
+          : f.v.map(function (v) { return '<option value="' + esc(v) + '"' + (r.v[f.k] === v ? ' selected' : '') + '>' + esc(optText(f, v)) + '</option>'; })).join('');
+        return '<div class="qf' + (bad ? ' bad' : '') + '"><label for="' + id + '">' + esc(f.l) + '</label><select id="' + id + '" data-k="' + f.k + '"' + (bad ? ' aria-invalid="true"' : '') + '>' + opts + '</select></div>';
+      }).join('');
+      var esp = p.campos.filter(function (f) { return esEspecial(f, r); }).map(function () {
+        return '<div class="qesp"><span class="qesp-t">Medidas especiales en cm (opcional)</span>' + ['largo', 'ancho', 'alto'].map(function (d) {
+          return '<label><span>' + d.charAt(0).toUpperCase() + d.slice(1) + '</span><input type="number" inputmode="numeric" min="1" placeholder="cm" data-esp="' + d + '" value="' + esc(r.esp[d]) + '"></label>';
+        }).join('') + '</div>';
+      }).join('');
+      return '<div class="qr' + (err ? ' bad' : '') + '" data-i="' + i + '">' +
+        '<div class="qn"><b>' + (i + 1) + '</b><span>Combinación ' + (i + 1) + '</span></div>' + fields +
+        '<div class="qf qq' + (intento && fx.q ? ' bad' : '') + '"><label for="q' + i + '">Cantidad</label><div class="stp2"><button type="button" data-d="-1" aria-label="Restar">−</button><input id="q' + i + '" type="number" inputmode="numeric" min="0" value="' + r.q + '" data-q><button type="button" data-d="1" aria-label="Sumar">+</button></div>' +
+        '</div>' +
+        '<button class="qdel" type="button" aria-label="Quitar combinación ' + (i + 1) + '"' + (rows.length < 2 ? ' disabled' : '') + '><svg class="i"><use href="#i-trash"/></svg></button>' +
+        esp + (err ? '<span class="qmsg">' + esc(mensaje(fx)) + '</span>' : '') + '</div>';
+    }).join('');
+    var malas = rows.filter(function (r) { var fx = faltan(r); return fx.campos.length || fx.q; }).length;
+    document.getElementById('q-alert').hidden = !(intento && malas);
+    sum();
+  }
+  function sum() {
+    var u = rows.reduce(function (a, r) { return a + (r.q > 0 ? r.q : 0); }, 0);
+    document.getElementById('q-sum').textContent = rows.length + (rows.length === 1 ? ' combinación' : ' combinaciones') + ' · ' + u + (u === 1 ? ' unidad' : ' unidades');
+  }
+
+  var qt = document.getElementById('qt');
+  qt.addEventListener('change', function (e) {
+    var t = e.target, el = t.closest('.qr'); if (!el) return; var r = rows[+el.getAttribute('data-i')];
+    if (t.hasAttribute('data-k')) { r.v[t.getAttribute('data-k')] = t.value; render(); focusBack(el, t); }
+    else if (t.hasAttribute('data-q')) { r.q = Math.max(0, parseInt(t.value, 10) || 0); if (intento) { render(); focusBack(el, t); } else { t.value = r.q; sum(); } }
+    else if (t.hasAttribute('data-esp')) r.esp[t.getAttribute('data-esp')] = t.value;
+  });
+  qt.addEventListener('input', function (e) { var t = e.target; if (t.hasAttribute('data-esp')) rows[+t.closest('.qr').getAttribute('data-i')].esp[t.getAttribute('data-esp')] = t.value; });
+  function focusBack(el, t) { var n = qt.querySelector('.qr[data-i="' + el.getAttribute('data-i') + '"] #' + t.id); if (n) n.focus(); }
+  qt.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var el = b.closest('.qr'), i = +el.getAttribute('data-i');
+    if (b.hasAttribute('data-d')) {
+      rows[i].q = Math.max(0, rows[i].q + (+b.getAttribute('data-d')));
+      if (intento) render(); else { el.querySelector('[data-q]').value = rows[i].q; sum(); }
+    } else if (b.classList.contains('qdel')) { rows.splice(i, 1); render(); }
+  });
+  document.getElementById('addrow').addEventListener('click', function () {
+    rows.push(nuevaFila(false)); render();
+    var last = qt.querySelector('.qr:last-child select'); if (last) last.focus();
+  });
+
+  document.getElementById('add-all').addEventListener('click', function () {
+    intento = true;
+    var malas = rows.filter(function (r) { var fx = faltan(r); return fx.campos.length || fx.q; });
+    render();
+    if (malas.length) {
+      var first = qt.querySelector('.qr.bad'); if (first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); var f = first.querySelector('.bad select, .bad input'); if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 400); }
+      return;
+    }
+    R.addLines(rows.map(function (r) {
+      return { code: p.code, q: r.q, attrs: p.campos.map(function (f) {
+        var v = r.v[f.k], a = { l: f.l, v: valText(f, v) };
+        if (f.col) a.hex = D.colores[v].hex;
+        if (esEspecial(f, r)) { var d = [r.esp.largo, r.esp.ancho, r.esp.alto].filter(Boolean); if (d.length) a.v += ' ' + d.join(' × ') + ' cm'; }
+        return a;
+      }) };
+    }));
+    var n = rows.length, u = rows.reduce(function (a, r) { return a + r.q; }, 0);
+    R.showT('Agregaste ' + n + (n === 1 ? ' combinación' : ' combinaciones') + ' · ' + u + ' unidades de ' + p.nombre);
+    intento = false; render();
+  });
+
+  document.getElementById('pdf').addEventListener('click', function () { R.showT('La ficha técnica en PDF se publicará con los datos reales de RED.'); });
+  document.getElementById('thumbs').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#thumbs button').forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+    var im = document.querySelector('#mainimg .im'); im.style.opacity = 0;
+    setTimeout(function () { im.style.backgroundImage = b.style.backgroundImage; im.style.opacity = 1; }, 250);
+  });
+  document.getElementById('go-q').addEventListener('click', function () { document.getElementById('cotiza').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  window.addEventListener('hashchange', load);
+  load();
+})();
+</script>
+</body>
+</html>

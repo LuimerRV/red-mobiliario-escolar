@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contacto · RED Mobiliario Escolar</title>
+<meta name="description" content="Contacto de RED Mobiliario Escolar: dirección, teléfono, WhatsApp, correo y formulario para consultas.">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&family=Montserrat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-page="contacto">
+
+<main>
+<section class="em-intro ct" aria-labelledby="h-page"><div class="wrap">
+  <nav class="crumbs dk" aria-label="Ruta"><a href="index.html">Inicio</a><span>/</span><span>Contacto</span></nav>
+  <h1 class="d rv" id="h-page">Contacto</h1>
+  <p class="em-lead rv">Para cotizar productos usa <a href="cotizacion.html" data-open-q>Mi cotización</a>. Para otras consultas, escríbenos.</p>
+
+  <div class="ct-g">
+    <!-- datos de contacto -->
+    <dl class="ct-data rv" id="ct-data"></dl>
+
+    <!-- formulario -->
+    <div class="shell rv"><div class="core ct-card">
+      <form id="ct-form" novalidate>
+        <h2 class="d">Escríbenos</h2>
+        <div class="form">
+          <div class="field"><label for="c-nombre">Nombre <span class="req">*</span></label><input id="c-nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellido" required></div>
+          <div class="field"><label for="c-inst">Institución</label><input id="c-inst" name="institucion" autocomplete="organization" placeholder="Opcional"></div>
+          <div class="field"><label for="c-correo">Correo <span class="req">*</span></label><input id="c-correo" name="correo" type="email" autocomplete="email" placeholder="nombre@institucion.cl" required></div>
+          <div class="field"><label for="c-tel">Teléfono</label><input id="c-tel" name="telefono" type="tel" autocomplete="tel" placeholder="+56 9 …"></div>
+          <div class="field full"><label for="c-msg">Mensaje <span class="req">*</span></label><textarea id="c-msg" name="mensaje" placeholder="Escribe tu consulta" required></textarea></div>
+        </div>
+        <button class="pill g full" type="submit">Enviar mensaje<span class="ic"><svg class="i"><use href="#i-send"/></svg></span></button>
+        <small class="ct-note">Prototipo: el envío real del formulario se conectará al correo de RED.</small>
+      </form>
+      <div class="ct-ok" id="ct-ok" hidden role="status">
+        <span class="em-ico"><svg class="i"><use href="#i-check"/></svg></span>
+        <h2 class="d">Mensaje enviado</h2>
+        <p>Gracias por escribirnos. Te responderemos al correo que indicaste.</p>
+        <button class="pill l sm" type="button" id="ct-new">Escribir otro mensaje<span class="ic"><svg class="i"><use href="#i-arr"/></svg></span></button>
+      </div>
+    </div></div>
+  </div>
+</div></section>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function () {
+  var R = window.RED, D = R.data, esc = R.esc, c = D.contacto;
+  // datos de contacto (los valores entre corchetes están por confirmar)
+  var filas = [['Dirección', c.direccion, 'pin'], ['Teléfono', c.telefono, 'phone'], ['WhatsApp', c.whatsapp, 'wa'], ['Correo', c.correo, 'mail'], ['Horario', c.horario, 'list']];
+  document.getElementById('ct-data').innerHTML = filas.map(function (f) {
+    var pend = /por confirmar/.test(f[1]);
+    return '<div><dt><span class="ct-i">' + R.ico(f[2]) + '</span>' + esc(f[0]) + '</dt><dd>' + (pend ? '<span class="pend-tag dk">[Por confirmar]</span>' : esc(f[1])) + '</dd></div>';
+  }).join('');
+
+  var form = document.getElementById('ct-form');
+  function field(el, ok, msg) {
+    var f = el.closest('.field'); f.classList.toggle('err', !ok);
+    var m = f.querySelector('.msg'); if (m) m.remove();
+    if (!ok) f.insertAdjacentHTML('beforeend', '<span class="msg">' + msg + '</span>');
+    return ok;
+  }
+  function validar() {
+    var E = form.elements, ok = true, first = null;
+    function chk(el, cond, msg) { var r = field(el, cond, msg); if (!r && !first) first = el; ok = ok && r; }
+    chk(E.nombre, E.nombre.value.trim().length > 2, 'Escribe tu nombre y apellido.');
+    chk(E.correo, /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(E.correo.value.trim()), 'Revisa el correo; debe tener el formato nombre@dominio.cl.');
+    chk(E.mensaje, E.mensaje.value.trim().length > 4, 'Escribe tu consulta.');
+    if (first) first.focus();
+    return ok;
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!validar()) return;
+    form.hidden = true; document.getElementById('ct-ok').hidden = false;
+  });
+  form.addEventListener('input', function (e) { var f = e.target.closest('.field'); if (f && f.classList.contains('err')) validar(); });
+  document.getElementById('ct-new').addEventListener('click', function () { form.reset(); form.hidden = false; document.getElementById('ct-ok').hidden = true; });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cotizaciones para instituciones públicas · RED Mobiliario Escolar</title>
+<meta name="description" content="Formulario de cotización para municipalidades, servicios locales de educación, colegios y jardines públicos y otros organismos del Estado. Proveedor habilitado en Mercado Público.">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&family=Montserrat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-page="instituciones">
+
+<main>
+<section class="cq ip" aria-labelledby="h-page"><div class="wrap">
+  <nav class="crumbs dk" aria-label="Ruta"><a href="index.html">Inicio</a><span>/</span><span>Cotizaciones para instituciones públicas</span></nav>
+  <span class="ip-tag">Cotizaciones para</span>
+  <h1 class="d ip-h" id="h-page">Instituciones públicas</h1>
+  <p class="em-lead">Formulario para municipalidades, servicios locales de educación, colegios y jardines públicos y otros organismos del Estado. Indica los productos y cantidades requeridos y, si corresponde, el ID de la Compra Ágil o licitación.</p>
+
+  <div class="cq-g ip-g" id="main-view">
+    <!-- por qué cotizar con RED: panel verde -->
+    <aside class="shell ip-side"><div class="core">
+      <span class="ip-ico"><svg aria-hidden="true"><use href="#iso-compra"/></svg></span>
+      <ul class="ip-list">
+        <li><span class="ip-ck"><svg class="i"><use href="#i-check"/></svg></span><div><b>Proveedor habilitado en Mercado Público</b><span>Inscritos en el Registro de Proveedores del Estado.</span></div></li>
+        <li><span class="ip-ck"><svg class="i"><use href="#i-check"/></svg></span><div><b>Experiencia en Compra Ágil</b><span>Hemos participado y adjudicado compras mediante Compra Ágil.</span></div></li>
+        <li><span class="ip-ck"><svg class="i"><use href="#i-check"/></svg></span><div><b>Cotización formal por correo</b><span>Indica el ID del proceso y respondemos con una cotización lista para tu orden de compra.</span></div></li>
+        <li><span class="ip-ck"><svg class="i"><use href="#i-check"/></svg></span><div><b>Despachos a todo Chile</b><span>Entregamos en la comuna del organismo o establecimiento.</span></div></li>
+      </ul>
+      <span class="pend-tag">[RUT proveedor y enlace a ficha en Mercado Público · por confirmar]</span>
+    </div></aside>
+
+    <div class="shell cq-fs"><div class="core cq-form">
+      <form id="form" novalidate>
+        <h2 class="d">Solicitud de cotización</h2>
+        <!-- líneas de Mi cotización que se adjuntan -->
+        <div class="ip-att" id="att" hidden>
+          <div class="ip-att-h"><span><svg class="i"><use href="#i-list"/></svg><b id="att-n"></b> de Mi cotización se adjuntan a esta solicitud</span><label class="ip-sw"><input type="checkbox" id="att-on" checked><span>Adjuntar</span></label></div>
+          <ul class="ip-att-l" id="att-l"></ul>
+        </div>
+        <div class="form">
+          <div class="field full"><label for="f-prod">Productos y cantidades requeridos <span class="req" id="r-prod">*</span></label><textarea id="f-prod" name="productos" placeholder="Ej.: 40 sillas escolares talla N°4, 20 mesas unipersonales, 6 lockers de 4 puertas"></textarea></div>
+          <div class="field"><label for="f-org">Organismo o institución <span class="req">*</span></label><input id="f-org" name="organismo" autocomplete="organization" placeholder="Ej.: Municipalidad de Temuco"></div>
+          <div class="field"><label for="f-rut">RUT <span class="req">*</span></label><input id="f-rut" name="rut" placeholder="76.123.456-7"></div>
+          <div class="field"><label for="f-cont">Persona de contacto <span class="req">*</span></label><input id="f-cont" name="contacto" autocomplete="name" placeholder="Nombre y apellido"></div>
+          <div class="field"><label for="f-mail">Correo <span class="req">*</span></label><input id="f-mail" name="correo" type="email" autocomplete="email" placeholder="nombre@institucion.cl"></div>
+          <div class="field"><label for="f-tel">Teléfono <span class="req">*</span></label><input id="f-tel" name="telefono" type="tel" autocomplete="tel" placeholder="+56 9 …"></div>
+          <div class="field"><label for="f-com">Comuna de despacho <span class="req">*</span></label><input id="f-com" name="comuna" placeholder="Ej.: Temuco"></div>
+          <div class="field full"><label for="f-ca">ID Compra Ágil o licitación <small>(opcional)</small></label><input id="f-ca" name="compraAgil" placeholder="Ej.: 1234-56-COT24"></div>
+        </div>
+        <p class="cq-small">Te enviaremos una copia de la solicitud al correo indicado.</p>
+        <button class="pill o full" type="submit">Enviar solicitud<span class="ic"><svg class="i"><use href="#i-send"/></svg></span></button>
+      </form>
+    </div></div>
+  </div>
+
+  <div class="shell cq-state" id="done" hidden><div class="core">
+    <span class="cq-ok"><svg class="i"><use href="#i-check"/></svg></span>
+    <h2 class="d">Recibimos tu solicitud</h2>
+    <span class="cq-nro" id="nro"></span>
+    <p>Te enviamos una copia a tu correo <b id="ok-mail"></b>.</p>
+    <p id="ok-txt"></p>
+    <small class="cq-proto">Prototipo: la solicitud no se envió a ningún correo. En el sitio final se envía a RED con copia al correo indicado.</small>
+    <div class="cq-btns"><a class="pill g" href="catalogo.html">Volver al catálogo<span class="ic"><svg class="i"><use href="#i-arr"/></svg></span></a><a class="pill l" href="como-cotizar.html#despachos">Plazos de despacho<span class="ic"><svg class="i"><use href="#i-truck"/></svg></span></a></div>
+  </div></div>
+</div></section>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/forms.js"></script>
+<script>
+(function () {
+  var R = window.RED, esc = R.esc, F = window.REDForms;
+  var form = document.getElementById('form'), E = form.elements, att = document.getElementById('att'), on = document.getElementById('att-on');
+
+  // si hay líneas en Mi cotización, se muestran y se adjuntan (el texto libre pasa a ser opcional)
+  function renderAtt() {
+    var ls = R.lines();
+    att.hidden = !ls.length;
+    document.getElementById('att-n').textContent = ls.length + (ls.length === 1 ? ' línea' : ' líneas');
+    document.getElementById('att-l').innerHTML = ls.map(function (l) {
+      var p = R.prodBy(l.code); if (!p) return '';
+      return '<li><span class="q">× ' + l.q + '</span><span><b>' + esc(p.nombre) + '</b> · ' + p.code + ' · ' + esc(R.attrsText(l)) + '</span></li>';
+    }).join('');
+    att.classList.toggle('off', !on.checked);
+    document.getElementById('r-prod').hidden = adjunta();
+  }
+  function adjunta() { return R.lines().length > 0 && on.checked; }
+  on.addEventListener('change', renderAtt);
+  R.onChange(renderAtt);
+
+  function validar(silencioso) {
+    var v = F.validator(silencioso);
+    if (adjunta() && !E.productos.value.trim()) F.mark(E.productos, true);
+    else v.chk(E.productos, E.productos.value.trim().length > 3, 'Indica los productos y cantidades requeridos.');
+    v.chk(E.organismo, E.organismo.value.trim().length > 1, 'Indica el organismo o institución.');
+    v.chk(E.rut, F.rutValido(E.rut.value), E.rut.value.trim() ? 'Revisa el RUT; el dígito verificador no coincide.' : 'Indica el RUT del organismo.');
+    v.chk(E.contacto, E.contacto.value.trim().length > 2, 'Escribe nombre y apellido.');
+    v.chk(E.correo, F.correoValido(E.correo.value), 'Revisa el correo; debe tener el formato nombre@dominio.cl.');
+    v.chk(E.telefono, E.telefono.value.replace(/\D/g, '').length >= 8, 'Escribe un teléfono de al menos 8 dígitos.');
+    v.chk(E.comuna, E.comuna.value.trim().length > 1, 'Escribe la comuna de despacho.');
+    return v.done();
+  }
+  form.addEventListener('input', function (e) { var f = e.target.closest('.field'); if (f && f.classList.contains('err')) validar(true); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!validar(false)) return;
+    var n = adjunta() ? R.lines().length : 0;
+    document.getElementById('nro').textContent = 'N.º de solicitud ' + F.numero();
+    document.getElementById('ok-mail').textContent = E.correo.value.trim();
+    document.getElementById('ok-txt').textContent = (n ? 'Adjuntamos ' + n + (n === 1 ? ' línea' : ' líneas') + ' de Mi cotización. ' : '') + (E.compraAgil.value.trim() ? 'Responderemos dentro del proceso ' + E.compraAgil.value.trim() + '.' : 'Te contactaremos con la cotización.');
+    if (n) R.clear();
+    document.getElementById('main-view').hidden = true; document.getElementById('done').hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  renderAtt();
+})();
+</script>
+</body>
+</html>
